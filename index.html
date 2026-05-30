@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern News Index with Chyron</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f8fb;
+      color: #111827;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 94%;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .chyron {
+      background: #102f57;
+      color: white;
+      height: 34px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .chyron-track {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: scroll-left 28s linear infinite;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .chyron span {
+      margin-right: 60px;
+    }
+
+    .chyron strong {
+      color: #ffcf3f;
+      margin-right: 8px;
+    }
+
+    @keyframes scroll-left {
+      from {
+        transform: translateX(100%);
+      }
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    .topbar {
+      background: #eef3fb;
+      border-bottom: 1px solid #dbe4f0;
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .left-nav {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: #123d7a;
+    }
+
+    .logo-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0f3f83, #1d5fc4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .logo-circle::after {
+      content: '11';
+      position: absolute;
+      right: -14px;
+      font-size: 28px;
+      font-weight: 900;
+      color: #f5b400;
+    }
+
+    .logo-text {
+      margin-left: 12px;
+      line-height: 1;
+    }
+
+    .logo-text .small {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .logo-text .big {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .nav {
+      display: flex;
+      gap: 24px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .nav a:hover {
+      color: #0f3f83;
+    }
+
+    .weather {
+      font-size: 15px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .breaking {
+      background: #fff6df;
+      border-bottom: 1px solid #eedfb0;
+      padding: 12px 0;
+    }
+
+    .breaking-inner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 15px;
+    }
+
+    .breaking-label {
+      background: #ffcf3f;
+      color: #111;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 34px;
+      padding: 36px 0 60px;
+    }
+
+    .headline-tag {
+      display: inline-block;
+      background: #e4efff;
+      color: #1f5fc7;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .main-title {
+      font-size: 58px;
+      line-height: 1.02;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+      max-width: 900px;
+    }
+
+    .article-meta {
+      color: #64748b;
+      font-size: 16px;
+      margin-bottom: 28px;
+    }
+
+    .hero-image {
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      margin-bottom: 18px;
+    }
+
+    .hero-image img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+
+    .caption {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 34px;
+    }
+
+    .article-text {
+      background: white;
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 5px 24px rgba(0,0,0,0.05);
+    }
+
+    .article-text p {
+      font-size: 22px;
+      line-height: 1.7;
+      margin-bottom: 26px;
+    }
+
+    .quote {
+      border-left: 5px solid #c40000;
+      padding-left: 18px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #222;
+      margin: 35px 0;
+    }
+
+    .sidebar {
+      padding-top: 8px;
+    }
+
+    .sidebar-title {
+      font-size: 28px;
+      margin-bottom: 18px;
+      letter-spacing: -0.5px;
+    }
+
+    .side-story {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+      background: white;
+      padding: 9px;
+      border-radius: 13px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.045);
+      transition: 0.2s ease;
+    }
+
+    .side-story:hover {
+      transform: translateY(-2px);
+    }
+
+    .side-story img {
+      width: 112px;
+      height: 76px;
+      object-fit: cover;
+      border-radius: 9px;
+    }
+
+    .side-story h3 {
+      font-size: 16px;
+      line-height: 1.22;
+      margin-bottom: 5px;
+      letter-spacing: -0.1px;
+    }
+
+    .side-story p {
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .live-box {
+      margin-top: 28px;
+      background: linear-gradient(135deg, #071a38, #0d2f61);
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .live-box h3 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .live-box p {
+      opacity: 0.8;
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .main-title {
+        font-size: 48px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .topbar-inner,
+      .left-nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav {
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+
+      .main-title {
+        font-size: 38px;
+      }
+
+      .side-story {
+        grid-template-columns: 96px 1fr;
+      }
+
+      .side-story img {
+        width: 96px;
+        height: 66px;
+      }
+
+      .article-text {
+        padding: 24px;
+      }
+
+      .article-text p {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chyron">
+    <div class="chyron-track">
+      <span><strong>LIVE:</strong> Heavy rain and storms possible across central NC through tonight</span>
+      <span><strong>TRAFFIC:</strong> Delays reported on major routes during the evening commute</span>
+      <span><strong>LOCAL:</strong> Officials release new updates in developing investigation</span>
+      <span><strong>WEATHER:</strong> Cooler temperatures expected overnight</span>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="left-nav">
+        <div class="logo">
+          <div class="logo-circle">abc</div>
+          <div class="logo-text">
+            <div class="small">Eyewitness</div>
+            <div class="big">NEWS</div>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="#">Local News</a>
+          <a href="#">Weather</a>
+          <a href="#">Politics</a>
+          <a href="#">Sports</a>
+          <a href="#">Traffic</a>
+          <a href="#">Watch Live</a>
+        </nav>
+      </div>
+
+      <div class="weather">☀️ 60° Raleigh, NC</div>
+    </div>
+  </header>
+
+  <div class="breaking">
+    <div class="container breaking-inner">
+      <div class="breaking-label">Breaking News</div>
+      <div>Antifa Breaches Intel Oregon Facility After Contractor Leaves ‘DO NOT ENTER’ Door Unsecured.</div>
+    </div>
+  </div>
+
+  <main class="container layout">
+    <section>
+      <div class="headline-tag">GAMING NEWS</div>
+
+      <h1 class="main-title">
+        Exclusive Report: Fortnite Whistleblower Reveals True Reason Behind Mass Layoffs
+      </h1>
+
+      <div class="article-meta">
+        By Frank Williams | Tuesday, May 19, 2026 | 8:42 AM
+      </div>
+
+      <div class="hero-image">
+        <img src="Report.PNG" alt="Main article image">
+      </div>
+
+
+      <div class="article-text">
+        <p>RALEIGH, NC (WVTD) -- A recently terminated employee from Epic Games is speaking out after a recent round of layoffs, claiming that an unexpected source contributed heavily to the company’s internal chaos: a single Fortnite gamer whose IP address showed they were based in Alabama and who filed over 10,000 cheating reports over the course of several years.</p>
+       
+	<p>The former employee, who requested anonymity and referred to himself only as “Anonymous304” claims the flood of reports created “an absolute nightmare” for moderation staff and overloaded internal systems designed to process cheating investigations.</p>
+
+<div class="quote">
+        “At first everyone thought it was a coordinated bot attack,” the whistleblower said. “Then we realized it was mostly one guy. One very committed guy.”
+      </div>
+
+        <p>According to Anonymous304, the Alabama-based gamer reported nearly every opponent who eliminated him in-game, accusing players of having “Obvious Aimbot installed,” “Tracking him through terrain,” or using what he referred to as “Walmart Hacks.” Investigators found that only around 2% of the reports were ultimately considered credible. At one point, the user even reported Ninja, the famous streamer, after an embarrassing loss.</p>
+
+
+	<p>Sources familiar with the situation claim the backlog became so severe that server allocations had to be reduced during several peak periods, leading to degraded matchmaking performance and increased operational costs. Employees reportedly spent thousands of hours reviewing and processing the ongoing stream of reports.</p>
+
+
+     <div class="quote">
+	“The system wasn’t built for somebody treating the report button like a machine gun,” he said. “There were multiple times when the queue backed up so fast it looked like everyone in the lobby suddenly discovered the report button was a mythic item.”
+      </div>
+
+
+      <p>
+         Industry analysts have questioned the plausibility of the claims, but Anonymous304 insists upper management quietly acknowledged the issue internally months before the layoffs began.
+      </p>
+
+
+      <div class="quote">
+        “People think the layoffs were because of the economy or declining player counts,” he stated. “No. It was because moderation teams were drowning in reports from one guy in Alabama who genuinely believed every 12-year-old with decent aim was hacking.”
+      </div>
+
+       <p>
+	The individual has not been publicly identified, though Anonymous304 claims he is now the subject of an ongoing internal investigation and possible civil action related to operational damages.
+      </p> 
+
+       <p>
+	Representatives for Epic Games declined to comment directly on the allegations but issued a brief statement:
+      </p> 
+
+
+      <div class="quote">
+	“We continuously evaluate our moderation systems to ensure reports are handled efficiently and fairly,” the representative said, while also issuing a reminder to players that the report feature is “not intended to function as a primary gameplay mechanic.”
+      </div>
+
+       <p>
+	Meanwhile, players online have already turned the story into a meme, with hashtags like #ReportRoyale and #ReportButtonWarrior trending across gaming forums.
+      </p> 
+
+       <p>
+	One viral post joked:
+      </p> 
+
+
+      <div class="quote">
+	“Bro got so mad after losing at Fortnite he accidentally downsized a corporation.”
+      </div>
+
+       <p>
+	As of publication, no official lawsuit has been filed, though insiders claim legal teams are “monitoring the situation closely.”
+      </p> 
+
+
+
+
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <h2 class="sidebar-title">Top Stories</h2>
+
+      <article class="side-story">
+        <img src="geo.png" alt="Story image">
+        <div>
+          <h3><a href="#">Retired Floridian firefighter delcares victory after catching all the Geos</a></h3>
+          <p>Updated 1 hour ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="mumble.png" alt="Story image">
+        <div>
+          <h3><a href="#">Breakthrough scientific research has found cure for mumblers</a></h3>
+          <p>Updated 1 hour ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="prison.png" alt="Story image">
+        <div>
+          <h3><a href="#">Riots erupt in Canadian prison after one security guard makes tragic mistake</a></h3>
+          <p>Updated 12 minutes ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="singer.png" alt="Story image">
+        <div>
+          <h3><a href="#">New Study Finds: Lead Singers are mostly likely to be gayest member of the band</a></h3>
+          <p>Updated 36 minutes ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="compass.png" alt="Story image">
+        <div>
+          <h3><a href="#">Prime Minister of Canada lifts 100 year ban on compasses</a></h3>
+          <p>Updated 2 hours ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="cod.png" alt="Story image">
+        <div>
+          <h3><a href="#">Class-Action lawsuit filed against ActiVision for accidentally granting "Easy Mode" option to beta testers</a></h3>
+          <p>Updated 2 hours ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="swirl2.png" alt="Story image">
+        <div>
+          <h3><a href="#">Texas worker stuck on billboard for hours, his bright white smile saved him</a></h3>
+          <p>Updated 2 hours ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="gps.png" alt="Story image">
+        <div>
+          <h3><a href="#">Medical Breakthrough: GPS successfully removed from anus after 12 years</a></h3>
+          <p>Updated 2 hours ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="larry.png" alt="Story image">
+        <div>
+          <h3><a href="#">Larry The Cable Guy swears off meet and greets after "too many weirdos"</a></h3>
+          <p>Updated 2 hours ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="fluffy.png" alt="Story image">
+        <div>
+          <h3><a href="#">Young boy "Fluffy" wins $50,000 grand prize in Fortnite gaming tournament</a></h3>
+          <p>Updated 2 hours ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="turtles.png" alt="Story image">
+        <div>
+          <h3><a href="#">Leaked audio tape of XXX story, graphic details about two passionate turtles</a></h3>
+          <p>Updated 2 hours ago</p>
+        </div>
+      </article>
+
+      <article class="side-story">
+        <img src="salesman.png" alt="Story image">
+        <div>
+          <h3><a href="#">Car Insurance adjuster accidentally wins award for salesman of the year</a></h3>
+          <p>Updated 2 hours ago</p>
+        </div>
+      </article>
+
+
+      <article class="side-story">
+        <img src="goodbuddy17.png" alt="Story image">
+        <div>
+          <h3><a href="#">Breaker Breaker Busted: FBI Sting Targets ‘Good Buddy 17’ Trucker Hookup Network</a></h3>
+          <p>Updated 2 hours ago</p>
+        </div>
+      </article>
+
+      <div class="live-box">
+        <h3>Watch Live</h3>
+        <p>ABC11 Eyewitness News streaming live</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    © 2026 Example Local News — Soft modern news layout template.
+  </footer>
+
+</body>
+</html>
